@@ -127,3 +127,29 @@ CREATE TRIGGER update_stats_after_game
 CREATE INDEX IF NOT EXISTS user_stats_best_score_idx ON user_stats(best_score DESC);
 CREATE INDEX IF NOT EXISTS user_stats_win_loss_ratio_idx ON user_stats(win_loss_ratio DESC);
 CREATE INDEX IF NOT EXISTS user_stats_last_played_idx ON user_stats(last_played_at DESC);
+
+------------------------------------------------------
+-------modified by me -----------------
+
+ALTER TABLE user_stats
+ADD COLUMN username text;
+
+UPDATE user_stats u
+SET username = p.username
+FROM profiles p
+WHERE u.user_id = p.id;
+
+ALTER TABLE user_stats
+ADD CONSTRAINT fk_user_stats_username
+FOREIGN KEY (username)
+REFERENCES profiles(username);
+
+----------above i added username to user_stats table and added a foreign key to profiles table
+
+CREATE POLICY "Public leaderboard view"
+  ON user_stats
+  FOR SELECT
+  TO public
+  USING (true);
+
+  ----------above i added a policy to allow public to view the leaderboard

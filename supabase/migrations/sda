@@ -1,0 +1,28 @@
+# Create user statistics system
+
+  1. New Tables
+    - `user_stats`
+      - `user_id` (uuid, primary key, references auth.users)
+      - `current_score` (integer)
+      - `best_score` (integer)
+      - `total_games` (integer)
+      - `games_won` (integer)
+      - `games_lost` (integer)
+      - `win_loss_ratio` (decimal)
+      - `last_played_at` (timestamptz)
+      - `updated_at` (timestamptz)
+      - `username` (text, references profiles.username)
+
+  2. Functions
+    - Function to calculate win/loss ratio
+    - Function to update user stats after game completion
+    - Function to initialize user stats
+
+  3. Triggers
+    - Trigger to update stats when a game is completed
+    - Trigger to update the updated_at timestamp
+
+  4. Security
+    - Enable RLS
+    - Add policies for read/write access
+*/

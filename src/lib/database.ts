@@ -54,16 +54,18 @@ export async function getLeaderboard(limit = 10) {
         best_score,
         games_won,
         win_loss_ratio,
-        profiles (username)
+        username
       `)
       .order('best_score', { ascending: false })
       .limit(limit);
 
     if (error) throw error;
 
+    console.log(data);
+
     return data.map((entry) => ({
       userId: entry.user_id,
-      username: entry.profiles?.username,
+      username: entry.username,
       bestScore: entry.best_score,
       gamesWon: entry.games_won,
       winLossRatio: entry.win_loss_ratio,
@@ -158,7 +160,7 @@ export async function getDailyChallengeStatus(userId: string): Promise<DailyChal
     }
 
     // Calculate next available time (midnight Sri Lanka time)
-    const lastCompletedAt = new Date(lastChallenge.completed_at);
+    // const lastCompletedAt = new Date(lastChallenge.completed_at);
     const nextAvailable = new Date(sriLankaTime);
     nextAvailable.setHours(24, 0, 0, 0); // Set to next midnight in Sri Lanka time
 

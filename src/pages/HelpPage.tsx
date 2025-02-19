@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Banana, Brain, Target, Clock, Trophy, HelpCircle } from 'lucide-react';
 

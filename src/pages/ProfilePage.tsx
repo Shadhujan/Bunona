@@ -9,7 +9,8 @@ import {
   Percent,
   Flame,
   Crown,
-  Star
+  Star,
+  HeartCrack
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { getUserStats } from '../lib/database';
@@ -122,7 +123,7 @@ export function ProfilePage() {
           <StatCard
             title="Games Lost"
             value={stats?.gamesLost || 0}
-            icon={Flame}
+            icon={HeartCrack}
             color="text-red-500"
           />
           <StatCard
@@ -130,6 +131,12 @@ export function ProfilePage() {
             value={`${((stats?.winLossRatio || 0) * 100).toFixed(1)}%`}
             icon={Percent}
             color="text-purple-500"
+          />
+          <StatCard
+            title="Streak"
+            value="5"
+            icon={Flame}
+            color="text-orange-500"
           />
         </div>
 

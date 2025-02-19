@@ -257,6 +257,9 @@ const floatingBananas = useMemo(
 }
 
 function App() {
+  // const { user } = useAuth();
+  // const username = user?.user_metadata.username || 'Player';
+
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
