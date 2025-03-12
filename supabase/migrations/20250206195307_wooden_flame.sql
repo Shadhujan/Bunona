@@ -50,6 +50,21 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+--------OR-------- might be not working if user signup below code
+
+DECLARE
+  new_username text;
+BEGIN
+  new_username := NEW.user_metadata->>'username';
+  IF new_username IS NULL THEN
+    RAISE EXCEPTION 'Username is missing for user %', NEW.id;
+  END IF;
+  INSERT INTO public.profiles (id, username)
+  VALUES (NEW.id, new_username);
+  RETURN NEW;
+END;
+--------------------------------------------
+
 -- Create trigger for new user creation
 CREATE OR REPLACE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users

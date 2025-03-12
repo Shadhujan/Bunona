@@ -30,7 +30,7 @@ export function DailyChallengeGame() {
   >('playing');
   const [error, setError] = useState<string | null>(null);
   const [isSavingScore, setIsSavingScore] = useState(false);
-  const [streak, setStreak] = useState(1);
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     const loadStreak = async () => {

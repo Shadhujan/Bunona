@@ -62,6 +62,12 @@ export function SignupPage() {
       } else if (error instanceof Error) {
         setErrors({ submit: error.message });
       }
+      // navigate('/login', { 
+      //   state: { message: 'Account created successfully! Please log in.' }
+      // });
+
+      // ///////////////final viva make sure to un thick these and do
+      
     } finally {
       setIsLoading(false);
     }

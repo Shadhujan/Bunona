@@ -153,3 +153,77 @@ CREATE POLICY "Public leaderboard view"
   USING (true);
 
   ----------above i added a policy to allow public to view the leaderboard
+
+--------------------------------
+CREATE OR REPLACE FUNCTION sync_username_to_user_stats()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- UPSERT: insert a new row if one doesn't exist, otherwise update the username
+  INSERT INTO user_stats (user_id, username, updated_at)
+  VALUES (NEW.id, NEW.username, now())
+  ON CONFLICT (user_id) DO UPDATE
+    SET username = EXCLUDED.username,
+        updated_at = now();
+        
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+ -----------------above i added a function to sync username from profiles to user_stats table
+
+DROP TRIGGER IF EXISTS trg_sync_username_on_profiles ON profiles;
+
+CREATE TRIGGER trg_sync_username_on_profiles
+AFTER INSERT OR UPDATE OF username ON profiles
+FOR EACH ROW
+EXECUTE FUNCTION sync_username_to_user_stats();
+
+-----------------above i added a trigger to sync username from profiles to user_stats table
+
+  CREATE OR REPLACE FUNCTION update_user_stats()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO user_stats (
+    user_id,
+    current_score,
+    best_score,
+    total_games,
+    games_won,
+    games_lost,
+    win_loss_ratio,
+    last_played_at,
+    username
+  )
+  VALUES (
+    NEW.user_id,
+    NEW.score,
+    NEW.score,
+    1,
+    CASE WHEN NEW.score > 0 THEN 1 ELSE 0 END,
+    CASE WHEN NEW.score = 0 THEN 1 ELSE 0 END,
+    calculate_win_loss_ratio(
+      CASE WHEN NEW.score > 0 THEN 1 ELSE 0 END,
+      CASE WHEN NEW.score = 0 THEN 1 ELSE 0 END
+    ),
+    NEW.completed_at,
+    COALESCE((SELECT username FROM profiles WHERE id = NEW.user_id), 'Player')
+  )
+  ON CONFLICT (user_id) DO UPDATE SET
+    current_score = NEW.score,
+    best_score = GREATEST(user_stats.best_score, NEW.score),
+    total_games = user_stats.total_games + 1,
+    games_won = user_stats.games_won + CASE WHEN NEW.score > 0 THEN 1 ELSE 0 END,
+    games_lost = user_stats.games_lost + CASE WHEN NEW.score = 0 THEN 1 ELSE 0 END,
+    win_loss_ratio = calculate_win_loss_ratio(
+      user_stats.games_won + CASE WHEN NEW.score > 0 THEN 1 ELSE 0 END,
+      user_stats.games_lost + CASE WHEN NEW.score = 0 THEN 1 ELSE 0 END
+    ),
+    last_played_at = NEW.completed_at,
+    updated_at = now(),
+    username = COALESCE((SELECT username FROM profiles WHERE id = NEW.user_id), 'Player');
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+-------------------- above is for trigger when user game score will update into leaderboar with user name
