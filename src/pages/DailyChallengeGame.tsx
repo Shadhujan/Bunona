@@ -18,25 +18,23 @@ interface Question {
 }
 
 export function DailyChallengeGame() {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const [score, setScore] = useState(10);
-  const [timeLeft, setTimeLeft] = useState(30); // Increased time for daily challenge
-  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [userAnswer, setUserAnswer] = useState('');
-  const [gameState, setGameState] = useState<
-    'playing' | 'correct' | 'incorrect' | 'gameover'
-  >('playing');
-  const [error, setError] = useState<string | null>(null);
-  const [isSavingScore, setIsSavingScore] = useState(false);
-  const [streak, setStreak] = useState(0);
+  const navigate = useNavigate(); // Navigation hook
+  const { user } = useAuth(); // Get current user from AuthContext
+  const [score, setScore] = useState(10); // State for score
+  const [timeLeft, setTimeLeft] = useState(10); // State for timer
+  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null); // State for current question
+  const [isLoading, setIsLoading] = useState(true); // State for loading status
+  const [userAnswer, setUserAnswer] = useState(''); // State for user's answer
+  const [gameState, setGameState] = useState<'playing' | 'correct' | 'incorrect' | 'gameover'>('playing'); // State for game status
+  const [error, setError] = useState<string | null>(null); // State for error messages
+  const [isSavingScore, setIsSavingScore] = useState(false); // State for saving score status
+  const [streak, setStreak] = useState(0); // State for user's streak
 
   useEffect(() => {
     const loadStreak = async () => {
       if (user) {
-        const status = await getDailyChallengeStatus(user.id);
-        setStreak(status.currentStreak);
+        const status = await getDailyChallengeStatus(user.id); // Fetch user's streak status
+        setStreak(status.currentStreak); // Set user's streak
       }
     };
     loadStreak();
@@ -46,7 +44,7 @@ export function DailyChallengeGame() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('https://marcconrad.com/uob/banana/api.php');
+      const response = await fetch('https://marcconrad.com/uob/banana/api.php'); // Fetch new question
       if (!response.ok) throw new Error('Failed to fetch question');
 
       const data = await response.json();
@@ -54,36 +52,36 @@ export function DailyChallengeGame() {
         throw new Error('Invalid question format');
       }
 
-      setCurrentQuestion(data);
-      setGameState('playing');
+      setCurrentQuestion(data); // Set current question
+      setGameState('playing'); // Set game state to playing
       setTimeLeft(10); // Reset timer for new question
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load question');
+      setError(err instanceof Error ? err.message : 'Failed to load question'); // Set error message
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Set loading status to false
     }
   }, []);
 
   useEffect(() => {
-    fetchQuestion();
+    fetchQuestion(); // Fetch question on component mount
   }, [fetchQuestion]);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
-          setGameState('gameover');
+          setGameState('gameover'); // Set game state to gameover if time runs out
           return 0;
         }
-        return prev - 1;
+        return prev - 1; // Decrease timer
       });
     }, 1000);
 
     if (timeLeft === 0 || gameState === 'gameover') {
-      clearInterval(timer);
+      clearInterval(timer); // Clear timer if game is over
     }
 
-    return () => clearInterval(timer);
+    return () => clearInterval(timer); // Cleanup timer on component unmount
   }, [timeLeft]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -92,20 +90,20 @@ export function DailyChallengeGame() {
 
     const answer = parseInt(userAnswer, 10);
     if (isNaN(answer)) {
-      setError('Please enter a valid number');
+      setError('Please enter a valid number'); // Set error if answer is not a number
       return;
     }
 
     if (answer === currentQuestion.solution) {
       setScore((prev) => prev * 2); // Double the score for correct answers
-      setGameState('correct');
+      setGameState('correct'); // Set game state to correct
       setTimeout(() => {
-        fetchQuestion();
-        setUserAnswer('');
-        setGameState('playing');
+        fetchQuestion(); // Fetch new question after delay
+        setUserAnswer(''); // Reset user answer
+        setGameState('playing'); // Set game state to playing
       }, 1500);
     } else {
-      setGameState('gameover');
+      setGameState('gameover'); // Set game state to gameover if answer is incorrect
     }
   };
 
@@ -134,15 +132,15 @@ export function DailyChallengeGame() {
       if (insertError) throw insertError;
     } catch (err) {
       console.error('Failed to save score:', err);
-      setError('Failed to save your score. Please try again.');
+      setError('Failed to save your score. Please try again.'); // Set error if saving score fails
     } finally {
-      setIsSavingScore(false);
+      setIsSavingScore(false); // Set saving score status to false
     }
   };
 
   useEffect(() => {
     if (gameState === 'gameover') {
-      saveScore();
+      saveScore(); // Save score when game is over
     }
   }, [gameState]);
 

@@ -15,6 +15,19 @@ describe('getLeaderboard', () => {
   });
 
   it('should fetch and transform leaderboard data correctly', async () => {
+    /**
+     * Mock data representing user statistics.
+     * 
+     * @constant
+     * @type {Array<Object>}
+     * 
+     * @property {string} user_id - Unique identifier for the user.
+     * @property {number} best_score - The highest score achieved by the user.
+     * @property {number} games_won - The number of games won by the user.
+     * @property {number} win_loss_ratio - The ratio of wins to losses for the user.
+     * @property {Object} profiles - An object containing user profile information.
+     * @property {string} profiles.username - The username of the user.
+     */
     const mockData = [
       {
         user_id: '123',

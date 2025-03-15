@@ -1,3 +1,32 @@
+/**
+* A functional component that renders a form input with a label and optional error message.
+*
+* @param {FormInputProps} props - The properties passed to the component.
+* @param {string} props.label - The label text for the input field.
+* @param {string} [props.error] - An optional error message to display below the input field.
+* @param {React.InputHTMLAttributes<HTMLInputElement>} props - Additional props to be spread onto the input element.
+*
+* @returns {JSX.Element} The rendered form input component.
+*/
+/**
+ * FormInput component renders a labeled input field with optional error message.
+*
+* @param {Object} props - The properties object.
+* @param {string} props.label - The label text for the input field.
+* @param {string} [props.error] - The error message to display if there is an error.
+* @param {Object} props.rest - The rest of the properties passed to the input element.
+*
+* @returns {JSX.Element} The rendered FormInput component.
+*
+* @example
+* <FormInput
+*   label="Username"
+*   id="username"
+*   type="text"
+*   error="Username is required"
+* />
+*/
+
 import React from 'react';
 
 interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {

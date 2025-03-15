@@ -1,5 +1,33 @@
-import { supabase } from './supabase';
+/**
+ * Retrieves the daily challenge status for a given user.
+ *
+ * @param userId - The ID of the user to retrieve the daily challenge status for.
+ * @returns A promise that resolves to an object containing the daily challenge status.
+ *
+ * The returned object contains the following properties:
+ * - `isAvailable`: A boolean indicating if the daily challenge is available.
+ * - `nextAvailableAt`: A string representing the next available time for the daily challenge in ISO format, or null if available.
+ * - `lastCompletedAt`: A string representing the last completion time of the daily challenge in ISO format, or null if not completed today.
+ * - `highestScore`: The highest score achieved by the user in the daily challenges.
+ * - `currentStreak`: The current streak of consecutive days the user has completed the daily challenge.
+ *
+ * The function performs the following steps:
+ * 1. Converts the current time to Sri Lanka timezone.
+ * 2. Retrieves the last completed challenge for today from the `daily_challenge_scores` table.
+ * 3. Retrieves the current streak of consecutive days the user has completed the daily challenge.
+ * 4. Retrieves the highest score achieved by the user in the daily challenges.
+ * 5. Calculates the next available time for the daily challenge (midnight Sri Lanka time).
+ * 6. Returns the daily challenge status.
+ *
+ * If an error occurs during any of the database operations, the function logs the error and returns a default status indicating the challenge is not available.
+ *
+ * @returns A promise that resolves to a `DailyChallenge` object containing the status of the daily challenge.
+ */
 
+
+import { supabase } from './supabase'; // Importing the supabase client for database operations
+
+// Interface defining the structure of user statistics
 export interface UserStats {
   currentScore: number;
   bestScore: number;
@@ -10,6 +38,7 @@ export interface UserStats {
   lastPlayedAt: string | null;
 }
 
+// Interface defining the structure of daily challenge status
 export interface DailyChallenge {
   isAvailable: boolean;
   nextAvailableAt: string | null;
@@ -18,18 +47,20 @@ export interface DailyChallenge {
   currentStreak: number;
 }
 
+// Function to get user statistics from the database
 export async function getUserStats(userId: string): Promise<UserStats | null> {
   try {
     const { data, error } = await supabase
-      .from('user_stats')
-      .select('*')
-      .eq('user_id', userId)
-      .single();
+      .from('user_stats') // Querying the 'user_stats' table
+      .select('*') // Selecting all columns
+      .eq('user_id', userId) // Filtering by user ID
+      .single(); // Expecting a single result
 
-    if (error) throw error;
+    if (error) throw error; // Throw error if any
 
-    if (!data) return null;
+    if (!data) return null; // Return null if no data found
 
+    // Mapping database fields to UserStats interface
     return {
       currentScore: data.current_score,
       bestScore: data.best_score,
@@ -45,24 +76,26 @@ export async function getUserStats(userId: string): Promise<UserStats | null> {
   }
 }
 
+// Function to get the leaderboard from the database
 export async function getLeaderboard(limit = 10) {
   try {
     const { data, error } = await supabase
-      .from('user_stats')
+      .from('user_stats') // Querying the 'user_stats' table
       .select(`
         user_id,
         best_score,
         games_won,
         win_loss_ratio,
         username
-      `)
-      .order('best_score', { ascending: false })
-      .limit(limit);
+      `) // Selecting specific columns
+      .order('best_score', { ascending: false }) // Ordering by best score in descending order
+      .limit(limit); // Limiting the number of results
 
-    if (error) throw error;
+    if (error) throw error; // Throw error if any
 
     console.log(data);
 
+    // Mapping database fields to a more readable format
     return data.map((entry) => ({
       userId: entry.user_id,
       username: entry.username,
@@ -76,6 +109,7 @@ export async function getLeaderboard(limit = 10) {
   }
 }
 
+
 export async function getDailyChallengeStatus(userId: string): Promise<DailyChallenge> {
   try {
     // Convert to Sri Lanka timezone
@@ -84,12 +118,12 @@ export async function getDailyChallengeStatus(userId: string): Promise<DailyChal
     
     // Get the last completed challenge for today
     const { data: lastChallenges, error: challengeError } = await supabase
-      .from('daily_challenge_scores')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('challenge_date', today)
-      .order('completed_at', { ascending: false })
-      .limit(1);
+      .from('daily_challenge_scores') // Querying the 'daily_challenge_scores' table
+      .select('*') // Selecting all columns
+      .eq('user_id', userId) // Filtering by user ID
+      .eq('challenge_date', today) // Filtering by today's date
+      .order('completed_at', { ascending: false }) // Ordering by completion time in descending order
+      .limit(1); // Limiting to the most recent entry
 
     if (challengeError) {
       console.error('Error fetching last challenge:', challengeError);
@@ -98,10 +132,10 @@ export async function getDailyChallengeStatus(userId: string): Promise<DailyChal
 
     // Get the current streak
     const { data: streakData, error: streakError } = await supabase
-      .from('daily_challenge_scores')
-      .select('challenge_date, score')
-      .eq('user_id', userId)
-      .order('challenge_date', { ascending: false });
+      .from('daily_challenge_scores') // Querying the 'daily_challenge_scores' table
+      .select('challenge_date, score') // Selecting challenge date and score
+      .eq('user_id', userId) // Filtering by user ID
+      .order('challenge_date', { ascending: false }); // Ordering by challenge date in descending order
 
     if (streakError) {
       console.error('Error fetching streak data:', streakError);
@@ -132,13 +166,48 @@ export async function getDailyChallengeStatus(userId: string): Promise<DailyChal
       }
     }
 
+    /*
+        // Normalize the date to midnight (only date part)
+    const normalizeDate = (date: Date): Date => {
+      const normalized = new Date(date);
+      normalized.setHours(0, 0, 0, 0);
+      return normalized;
+    };
+
+    let currentStreak = 0;
+    if (streakData && streakData.length > 0) {
+      // Map challenge dates to Date objects and normalize them
+      const dates = streakData.map(d => normalizeDate(new Date(d.challenge_date)));
+      const scores = streakData.map(d => d.score);
+      
+      for (let i = 0; i < dates.length; i++) {
+        if (scores[i] === 0) break; // Break streak on zero score
+        
+        if (i === 0) {
+          currentStreak++;
+          continue;
+        }
+        
+        // Calculate the difference in days between consecutive challenge dates
+        const diffInMs = Math.abs(dates[i - 1].getTime() - dates[i].getTime());
+        const diffInDays = diffInMs / (1000 * 60 * 60 * 24); // Convert ms to days
+        
+        if (diffInDays <= 2) { // Check if the difference is within 2 days
+          currentStreak++;
+        } else {
+          break; // Break if the difference is greater than 2 days
+        }
+      }
+    }
+    */
+
     // Get the highest score
     const { data: highScores, error: scoreError } = await supabase
-      .from('daily_challenge_scores')
-      .select('score')
-      .eq('user_id', userId)
-      .order('score', { ascending: false })
-      .limit(1);
+      .from('daily_challenge_scores') // Querying the 'daily_challenge_scores' table
+      .select('score') // Selecting the score column
+      .eq('user_id', userId) // Filtering by user ID
+      .order('score', { ascending: false }) // Ordering by score in descending order
+      .limit(1); // Limiting to the highest score
 
     if (scoreError) {
       console.error('Error fetching high scores:', scoreError);

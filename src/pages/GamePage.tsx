@@ -65,6 +65,7 @@ export function GamePage({ difficulty: propDifficulty }: GamePageProps) {
     fetchQuestion();
   }, [fetchQuestion]);
 
+  //timer logic
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -247,7 +248,7 @@ export function GamePage({ difficulty: propDifficulty }: GamePageProps) {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
+                <div>
                 <label htmlFor="answer" className="block text-sm font-medium text-gray-700 mb-1">
                   Your Answer
                 </label>
@@ -263,8 +264,10 @@ export function GamePage({ difficulty: propDifficulty }: GamePageProps) {
                   required
                   disabled={gameState !== 'playing'}
                   aria-label="Enter your answer"
+                  autoFocus
+                  ref={(input) => input && input.focus()}
                 />
-              </div>
+                </div>
               <button
                 type="submit"
                 disabled={gameState !== 'playing'}
