@@ -1,3 +1,31 @@
+# How to Setup
+
+1. Clone the repository to your local machine:
+    ```bash
+    git clone https://github.com/Shadhujan/Bunona.git
+    ```
+
+2. Navigate to the `Bunona` folder:
+    ```bash
+    cd Bunona
+    ```
+
+3. Install the required dependencies using npm:
+    ```bash
+    npm install
+    ```
+
+4. Start the development server:
+    ```bash
+    npm run dev
+    ```
+
+5. Open your browser and navigate to the provided local development URL to access the game:
+    ```bash
+    http://localhost:5173/
+    ```
+
+
 # CIS-Bunona-Game
 A Number Puzzle game using the ‘Banana’ API - https://marcconrad.com/uob/banana/doc.php This assignment asks to reflect on various concepts, paradigms and architectures related to Software Development. Software design principles (low coupling and high cohesion), event-driven programming, interoperability, and virtual identity.
 

@@ -1,0 +1,33 @@
+create table public.daily_challenge_scores (
+  id uuid not null default gen_random_uuid (),
+  user_id uuid not null,
+  score integer not null,
+  challenge_date date not null,
+  completed_at timestamp with time zone not null,
+  created_at timestamp with time zone null default now(),
+  constraint daily_challenge_scores_pkey primary key (id),
+  constraint daily_challenge_scores_user_id_fkey foreign KEY (user_id) references auth.users (id)
+) TABLESPACE pg_default;
+
+create index IF not exists daily_challenge_scores_date_score_idx on public.daily_challenge_scores using btree (challenge_date, score desc) TABLESPACE pg_default;
+
+create index IF not exists daily_challenge_scores_user_date_idx on public.daily_challenge_scores using btree (user_id, challenge_date) TABLESPACE pg_default;
+
+
+-- ** RLC Policy **
+
+--For Insert
+create policy "Users can insert own scores"
+on "public"."daily_challenge_scores"
+to authenticated
+with check (
+  (auth.uid() = user_id)
+);
+
+--For Select
+create policy "Users can read all scores"
+on "public"."daily_challenge_scores"
+to authenticated
+using (
+  true
+);

@@ -1,0 +1,37 @@
+create table public.game_scores (
+  id uuid not null default gen_random_uuid (),
+  user_id uuid not null,
+  score integer not null,
+  difficulty text not null,
+  completed_at timestamp with time zone not null,
+  created_at timestamp with time zone null default now(),
+  constraint game_scores_pkey primary key (id),
+  constraint game_scores_user_id_fkey foreign KEY (user_id) references auth.users (id)
+) TABLESPACE pg_default;
+
+create index IF not exists game_scores_score_idx on public.game_scores using btree (score desc) TABLESPACE pg_default;
+
+create index IF not exists game_scores_user_id_idx on public.game_scores using btree (user_id) TABLESPACE pg_default;
+
+create trigger update_stats_after_game
+after INSERT on game_scores for EACH row
+execute FUNCTION update_user_stats ();
+
+
+-- ** RLC Policy **
+
+--For Insert
+create policy "Users can insert own scores"
+on "public"."game_scores"
+to authenticated
+with check (
+  (auth.uid() = user_id)
+);
+
+--For Select
+create policy "Users can read all scores"
+on "public"."game_scores"
+to authenticated
+using (
+  true
+);
