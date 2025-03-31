@@ -2,14 +2,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Banana } from 'lucide-react';
+import { useAuth } from "../contexts/AuthContext";
 
 interface HeaderProps {
   username: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ username }) => {
+const Header: React.FC<HeaderProps> = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const username = user?.user_metadata.username || "Player";
   return (
+    <div className="bg-gradient-to-br from-yellow-200 to-yellow-400">
     <nav
       className="bg-yellow-200/90 shadow-md px-4 py-2 flex items-center justify-between rounded-lg backdrop-filter backdrop-blur-lg"
       style={{
@@ -30,6 +34,7 @@ const Header: React.FC<HeaderProps> = ({ username }) => {
         <span className="text-[#4A2C00] font-bold text-lg uppercase">{username}</span>
       </div>
     </nav>
+    </div>
   );
 };
 

@@ -10,8 +10,8 @@ import { HelpPage } from './pages/HelpPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { MainMenu } from './pages/MainMenu';
 import Footer from './components/Footer';
+import Header from './components/Header';
 // import Header from './components/Header';
-
 
 function App() {
   return (
@@ -20,34 +20,42 @@ function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/difficulty" element={
         <ProtectedRoute>
+          <Header username={''} />
             <DifficultyPage />
           <Footer />
         </ProtectedRoute>
       } />
       <Route path="/game/:difficulty" element={
         <ProtectedRoute>
+          <Header username={''} />
             <GamePage />
           <Footer />
         </ProtectedRoute>
       } />
       <Route path="/daily-challenge" element={
         <ProtectedRoute>
+          <Header username={''} />
           <DailyChallengeGame />
+          <Footer />
         </ProtectedRoute>
       } />
       <Route path="/leaderboard" element={
         <ProtectedRoute>
+          <Header username={''} />
           <LeaderboardPage />
+          <Footer />
         </ProtectedRoute>
       } />
       <Route path="/profile" element={
         <ProtectedRoute>
+          <Header username={''} />
           <ProfilePage />
           <Footer />
         </ProtectedRoute>
       } />
       <Route path="/help" element={
         <ProtectedRoute>
+          <Header username={''} />
           <HelpPage />
           <Footer />
         </ProtectedRoute>
