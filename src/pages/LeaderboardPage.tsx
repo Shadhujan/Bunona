@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Trophy, Medal, Crown, Banana, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { getLeaderboard } from '../lib/database';
+import DecorativeBanana from '../components/DecorativeBanana';
 
 interface LeaderboardEntry {
   userId: string;
@@ -129,13 +130,7 @@ export function LeaderboardPage() {
         )}
       </div>
 
-      {/* Decorative Bananas */}
-      <div className="fixed bottom-0 left-0 w-24 h-24 transform -rotate-12">
-        <Banana className="w-full h-full text-yellow-600 opacity-20" />
-      </div>
-      <div className="fixed top-0 right-0 w-24 h-24 transform rotate-45">
-        <Banana className="w-full h-full text-yellow-600 opacity-20" />
-      </div>
+      <DecorativeBanana />
     </div>
   );
 }

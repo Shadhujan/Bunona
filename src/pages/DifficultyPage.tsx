@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Banana, Brain, Zap, Swords, HelpCircle } from "lucide-react";
+import { Brain, Zap, Swords, HelpCircle } from "lucide-react";
+import DecorativeBanana from "../components/DecorativeBanana";
 
 const difficultyOptions = {
   easy: {
@@ -140,13 +141,7 @@ export function DifficultyPage() {
         </div>
       </div>
 
-      {/* Decorative Bananas */}
-      <div className="fixed bottom-0 left-0 w-24 h-24 transform -rotate-12">
-        <Banana className="w-full h-full text-yellow-600 opacity-20" />
-      </div>
-      <div className="fixed top-0 right-0 w-24 h-24 transform rotate-45">
-        <Banana className="w-full h-full text-yellow-600 opacity-20" />
-      </div>
+      <DecorativeBanana />
     </div>
   );
 }

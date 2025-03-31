@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Heart, Timer, Banana, Trophy, XCircle, CheckCircle } from 'lucide-react';
+import { Heart, Timer, Trophy, XCircle, CheckCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import DecorativeBanana from '../components/DecorativeBanana';
 
 interface GamePageProps {
   difficulty?: 'easy' | 'medium' | 'hard';
@@ -279,13 +280,8 @@ export function GamePage({ difficulty: propDifficulty }: GamePageProps) {
           </div>
         )}
       </div>
-      {/* Decorative Bananas */}
-      <div className="fixed bottom-0 left-0 w-24 h-24 transform -rotate-12">
-        <Banana className="w-full h-full text-yellow-600 opacity-20" />
-      </div>
-      <div className="fixed top-0 right-0 w-24 h-24 transform rotate-45">
-        <Banana className="w-full h-full text-yellow-600 opacity-20" />
-      </div>
+      
+      <DecorativeBanana />
     </div>
   );
 }

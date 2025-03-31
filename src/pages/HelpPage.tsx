@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Banana, Brain, Target, Clock, Trophy, HelpCircle } from 'lucide-react';
+import { ArrowLeft, Brain, Target, Clock, Trophy, HelpCircle } from 'lucide-react';
+import DecorativeBanana from '../components/DecorativeBanana';
 
 export function HelpPage() {
   const navigate = useNavigate();
@@ -105,13 +106,7 @@ export function HelpPage() {
         </div>
       </div>
 
-      {/* Decorative Bananas */}
-      <div className="fixed bottom-0 left-0 w-24 h-24 transform -rotate-12">
-        <Banana className="w-full h-full text-yellow-600 opacity-20" />
-      </div>
-      <div className="fixed top-0 right-0 w-24 h-24 transform rotate-45">
-        <Banana className="w-full h-full text-yellow-600 opacity-20" />
-      </div>
+      <DecorativeBanana />
     </div>
   );
 }

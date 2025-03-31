@@ -16,24 +16,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { getDailyChallengeStatus, getUserStats } from '../lib/database';
 import type { UserStats, DailyChallenge } from '../lib/database';
 import BadgeProps from '../components/BadgeProps';
-
-interface StatCardProps {
-  title: string;
-  value: number | string;
-  icon: React.ElementType;
-  color: string;
-  alt?: string; // Optional alt property
-}
-
-const StatCard = ({ title, value, icon: Icon, color }: StatCardProps) => (
-  <div className="bg-white/90 rounded-lg p-4 border-2 border-yellow-500 shadow-md hover:shadow-lg transition-shadow">
-    <div className="flex items-center justify-between mb-2">
-      <h3 className="text-sm font-medium text-gray-600">{title}</h3>
-      <Icon className={`w-5 h-5 ${color}`} />
-    </div>
-    <p className="text-2xl font-bold text-[#4A2C00]">{value}</p>
-  </div>
-);
+import DecorativeBanana from '../components/DecorativeBanana';
+import StatCard from '../components/StatCard';
 
 export function ProfilePage() {
   const navigate = useNavigate();
@@ -98,7 +82,7 @@ const [dailyChallengeStatus, setDailyChallengeStatus] = useState<DailyChallenge 
             <Banana className="w-12 h-12 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-[#4A2C00] mb-2">{username}</h1>
-          <p className="text-yellow-800">
+          <p className="text-yellow-800">Title  :
             {stats?.winLossRatio && stats.winLossRatio > 0.7
               ? 'Banana Master'
               : stats?.winLossRatio && stats.winLossRatio > 0.5
@@ -193,7 +177,7 @@ const [dailyChallengeStatus, setDailyChallengeStatus] = useState<DailyChallenge 
                     <Crown className="w-8 h-8 text-yellow-500 mb-2" />
                     <span className="text-sm text-center text-[#4A2C00]">Score Master</span>
                     <div className="hidden group-hover:block absolute bg-white text-gray-700 text-xs rounded-lg shadow-lg p-2 mt-2">
-                      <BadgeProps description="Get score morethan 500" />
+                      <BadgeProps description="Get score morethan 500 in one game" />
                     </div>
                   </div>
                 )}
@@ -202,7 +186,7 @@ const [dailyChallengeStatus, setDailyChallengeStatus] = useState<DailyChallenge 
                     <Star className="w-8 h-8 text-yellow-500 mb-2" />
                     <span className="text-sm text-center text-[#4A2C00]">Elite Player</span>
                     <div className="hidden group-hover:block absolute bg-white text-gray-700 text-xs rounded-lg shadow-lg p-2 mt-2">
-                      <BadgeProps description="Get Win Ration above 70%" />
+                      <BadgeProps description="Get Win Ratio above 70%" />
                     </div>
                   </div>
                 )}
@@ -211,7 +195,7 @@ const [dailyChallengeStatus, setDailyChallengeStatus] = useState<DailyChallenge 
                     <Gamepad2 className="w-8 h-8 text-yellow-500 mb-2" />
                     <span className="text-sm text-center text-[#4A2C00]">Dedicated Player</span>
                     <div className="hidden group-hover:block absolute bg-white text-gray-700 text-xs rounded-lg shadow-lg p-2 mt-2">
-                      <BadgeProps description="Played Total game over 50" />
+                      <BadgeProps description="Played more than 50 games total" />
                     </div>
                   </div>
                 )}
@@ -221,13 +205,7 @@ const [dailyChallengeStatus, setDailyChallengeStatus] = useState<DailyChallenge 
         </div>
       </div>
 
-      {/* Decorative Bananas */}
-      <div className="fixed bottom-0 left-0 w-24 h-24 transform -rotate-12">
-        <Banana className="w-full h-full text-yellow-600 opacity-20" />
-      </div>
-      <div className="fixed top-0 right-0 w-24 h-24 transform rotate-45">
-        <Banana className="w-full h-full text-yellow-600 opacity-20" />
-      </div>
+      <DecorativeBanana />
     </div>
   );
 }
