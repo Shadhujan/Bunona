@@ -234,7 +234,7 @@ export function MainMenu() {
         </div>
       )}
 
-<DecorativeBanana />
+      <DecorativeBanana />
 
       {/* Footer */}
       <Footer />

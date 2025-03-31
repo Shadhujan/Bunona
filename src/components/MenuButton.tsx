@@ -1,6 +1,6 @@
 // src/components/MenuButton.tsx
 import { LucideIcon } from "lucide-react";
-import { useState } from 'react';
+import { useState } from "react";
 
 interface MenuButtonProps {
   icon: LucideIcon;
@@ -10,17 +10,17 @@ interface MenuButtonProps {
   tooltipText?: string;
 }
 
-export function MenuButton({ 
-  icon: Icon, 
-  label, 
-  onClick, 
+export function MenuButton({
+  icon: Icon,
+  label,
+  onClick,
   disabled = false,
-  tooltipText 
+  tooltipText,
 }: MenuButtonProps) {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <div 
+    <div
       className="relative"
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
@@ -29,9 +29,9 @@ export function MenuButton({
         onClick={onClick}
         disabled={disabled}
         className={`w-full ${
-          disabled 
-            ? 'bg-red-500/50 cursor-not-allowed' 
-            : 'bg-red-500 hover:bg-red-600'
+          disabled
+            ? "bg-red-500/50 cursor-not-allowed"
+            : "bg-red-500 hover:bg-red-600"
         } text-white py-3 px-6 rounded transition-all hover:scale-105 flex items-center justify-center space-x-2`}
       >
         <Icon className="w-5 h-5" />

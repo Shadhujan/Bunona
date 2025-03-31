@@ -40,7 +40,7 @@ describe('getLeaderboard', () => {
 
     const mockSelect = vi.fn().mockResolvedValue({ data: mockData, error: null });
     const mockOrder = vi.fn().mockReturnValue({ limit: vi.fn().mockReturnValue({ select: mockSelect }) });
-    
+
     vi.mocked(supabase.from).mockReturnValue({
       select: mockSelect,
       order: mockOrder,
@@ -71,17 +71,17 @@ describe('getLeaderboard', () => {
   it('should handle errors gracefully', async () => {
     const mockError = new Error('Database error');
     const mockSelect = vi.fn().mockResolvedValue({ data: null, error: mockError });
-    
+
     vi.mocked(supabase.from).mockReturnValue({
       select: mockSelect,
     } as any);
 
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
     const result = await getLeaderboard();
 
     expect(result).toEqual([]);
     expect(consoleSpy).toHaveBeenCalledWith('Error fetching leaderboard:', mockError);
-    
+
     consoleSpy.mockRestore();
   });
 
@@ -97,7 +97,7 @@ describe('getLeaderboard', () => {
     ];
 
     const mockSelect = vi.fn().mockResolvedValue({ data: mockData, error: null });
-    
+
     vi.mocked(supabase.from).mockReturnValue({
       select: mockSelect,
     } as any);

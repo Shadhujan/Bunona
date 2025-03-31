@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { User } from "@supabase/supabase-js";
+import { supabase } from "../lib/supabase";
 
 // Define the shape of the AuthContext
 interface AuthContextType {
@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider'); // Ensure the hook is used within the AuthProvider
+    throw new Error("useAuth must be used within an AuthProvider"); // Ensure the hook is used within the AuthProvider
   }
   return context; // Return the context value
 }

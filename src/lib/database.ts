@@ -24,8 +24,7 @@
  * @returns A promise that resolves to a `DailyChallenge` object containing the status of the daily challenge.
  */
 
-
-import { supabase } from './supabase'; // Importing the supabase client for database operations
+import { supabase } from "./supabase"; // Importing the supabase client for database operations
 
 // Interface defining the structure of user statistics
 export interface UserStats {
@@ -51,11 +50,11 @@ export interface DailyChallenge {
 export async function getUserStats(userId: string): Promise<UserStats | null> {
   try {
     const { data, error } = await supabase
-      .from('user_stats')
-      .select('*')
-      .eq('user_id', userId)
+      .from("user_stats")
+      .select("*")
+      .eq("user_id", userId)
       .maybeSingle();
-      // Using maybeSingle to return null if no data is found
+    // Using maybeSingle to return null if no data is found
     // This is useful for handling cases where the user might not have any stats yet
     // or if the user ID is invalid.
     if (error) throw error; // Throw error if any
@@ -73,7 +72,7 @@ export async function getUserStats(userId: string): Promise<UserStats | null> {
       lastPlayedAt: data.last_played_at,
     };
   } catch (error) {
-    console.error('Error fetching user stats:', error);
+    console.error("Error fetching user stats:", error);
     return null;
   }
 }
@@ -82,15 +81,17 @@ export async function getUserStats(userId: string): Promise<UserStats | null> {
 export async function getLeaderboard(limit = 10) {
   try {
     const { data, error } = await supabase
-      .from('user_stats')
-      .select(`
+      .from("user_stats")
+      .select(
+        `
         user_id,
         best_score,
         games_won,
         win_loss_ratio,
         username
-      `) // Selecting specific columns
-      .order('best_score', { ascending: false }) // Ordering by best score in descending order
+      `
+      ) // Selecting specific columns
+      .order("best_score", { ascending: false }) // Ordering by best score in descending order
       .limit(limit); // Limiting the number of results
 
     if (error) throw error; // Throw error if any
@@ -106,60 +107,65 @@ export async function getLeaderboard(limit = 10) {
       winLossRatio: entry.win_loss_ratio,
     }));
   } catch (error) {
-    console.error('Error fetching leaderboard:', error);
+    console.error("Error fetching leaderboard:", error);
     return [];
   }
 }
 
-export async function getDailyChallengeStatus(userId: string): Promise<DailyChallenge> {
+export async function getDailyChallengeStatus(
+  userId: string
+): Promise<DailyChallenge> {
   try {
     // Convert to Sri Lanka timezone
-    const sriLankaTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Colombo' });
-    const today = new Date(sriLankaTime).toISOString().split('T')[0];
-    
+    const sriLankaTime = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Colombo",
+    });
+    const today = new Date(sriLankaTime).toISOString().split("T")[0];
+
     // Get the last completed challenge for today
     const { data: lastChallenges, error: challengeError } = await supabase
-      .from('daily_challenge_scores') // Querying the 'daily_challenge_scores' table
-      .select('*') // Selecting all columns
-      .eq('user_id', userId) // Filtering by user ID
-      .eq('challenge_date', today) // Filtering by today's date
-      .order('completed_at', { ascending: false }) // Ordering by completion time in descending order
+      .from("daily_challenge_scores") // Querying the 'daily_challenge_scores' table
+      .select("*") // Selecting all columns
+      .eq("user_id", userId) // Filtering by user ID
+      .eq("challenge_date", today) // Filtering by today's date
+      .order("completed_at", { ascending: false }) // Ordering by completion time in descending order
       .limit(1); // Limiting to the most recent entry
 
     if (challengeError) {
-      console.error('Error fetching last challenge:', challengeError);
+      console.error("Error fetching last challenge:", challengeError);
       throw challengeError;
     }
 
     // Get the current streak
     const { data: streakData, error: streakError } = await supabase
-      .from('daily_challenge_scores') // Querying the 'daily_challenge_scores' table
-      .select('challenge_date, score') // Selecting challenge date and score
-      .eq('user_id', userId) // Filtering by user ID
-      .order('challenge_date', { ascending: false }); // Ordering by challenge date in descending order
+      .from("daily_challenge_scores") // Querying the 'daily_challenge_scores' table
+      .select("challenge_date, score") // Selecting challenge date and score
+      .eq("user_id", userId) // Filtering by user ID
+      .order("challenge_date", { ascending: false }); // Ordering by challenge date in descending order
 
     if (streakError) {
-      console.error('Error fetching streak data:', streakError);
+      console.error("Error fetching streak data:", streakError);
       throw streakError;
     }
 
     // Calculate current streak
     let currentStreak = 0;
     if (streakData && streakData.length > 0) {
-      const dates = streakData.map(d => new Date(d.challenge_date));
-      const scores = streakData.map(d => d.score);
-      
+      const dates = streakData.map((d) => new Date(d.challenge_date));
+      const scores = streakData.map((d) => d.score);
+
       for (let i = 0; i < dates.length; i++) {
         if (scores[i] === 0) break; // Break streak on zero score
-        
+
         if (i === 0) {
           currentStreak++;
           continue;
         }
-        
+
         // Check if dates are consecutive
         const diff = Math.abs(dates[i - 1].getTime() - dates[i].getTime());
-        if (diff <= 86400000) { // 24 hours in milliseconds
+        if (diff <= 86400000) {
+          // 24 hours in milliseconds
           currentStreak++;
         } else {
           break;
@@ -169,14 +175,14 @@ export async function getDailyChallengeStatus(userId: string): Promise<DailyChal
 
     // Get the highest score
     const { data: highScores, error: scoreError } = await supabase
-      .from('daily_challenge_scores') // Querying the 'daily_challenge_scores' table
-      .select('score') // Selecting the score column
-      .eq('user_id', userId) // Filtering by user ID
-      .order('score', { ascending: false }) // Ordering by score in descending order
+      .from("daily_challenge_scores") // Querying the 'daily_challenge_scores' table
+      .select("score") // Selecting the score column
+      .eq("user_id", userId) // Filtering by user ID
+      .order("score", { ascending: false }) // Ordering by score in descending order
       .limit(1); // Limiting to the highest score
 
     if (scoreError) {
-      console.error('Error fetching high scores:', scoreError);
+      console.error("Error fetching high scores:", scoreError);
       throw scoreError;
     }
 
@@ -190,7 +196,7 @@ export async function getDailyChallengeStatus(userId: string): Promise<DailyChal
         nextAvailableAt: null,
         lastCompletedAt: null,
         highestScore,
-        currentStreak
+        currentStreak,
       };
     }
 
@@ -207,16 +213,16 @@ export async function getDailyChallengeStatus(userId: string): Promise<DailyChal
       nextAvailableAt: isAvailable ? null : nextAvailable.toISOString(),
       lastCompletedAt: lastChallenge.completed_at,
       highestScore,
-      currentStreak
+      currentStreak,
     };
   } catch (error) {
-    console.error('Error checking daily challenge status:', error);
+    console.error("Error checking daily challenge status:", error);
     return {
       isAvailable: false,
       nextAvailableAt: null,
       lastCompletedAt: null,
       highestScore: 0,
-      currentStreak: 0
+      currentStreak: 0,
     };
   }
 }

@@ -1,6 +1,13 @@
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Brain, Target, Clock, Trophy, HelpCircle } from 'lucide-react';
-import DecorativeBanana from '../components/DecorativeBanana';
+import { useNavigate } from "react-router-dom";
+import {
+  ArrowLeft,
+  Brain,
+  Target,
+  Clock,
+  Trophy,
+  HelpCircle,
+} from "lucide-react";
+import DecorativeBanana from "../components/DecorativeBanana";
 
 export function HelpPage() {
   const navigate = useNavigate();
@@ -24,8 +31,12 @@ export function HelpPage() {
           <div className="flex justify-center mb-4">
             <HelpCircle className="w-16 h-16 text-yellow-500" />
           </div>
-          <h1 className="text-4xl font-bold text-[#4A2C00] mb-2">How to Play</h1>
-          <p className="text-yellow-800">Master the game with these helpful tips!</p>
+          <h1 className="text-4xl font-bold text-[#4A2C00] mb-2">
+            How to Play
+          </h1>
+          <p className="text-yellow-800">
+            Master the game with these helpful tips!
+          </p>
         </div>
 
         {/* Main Content */}
@@ -38,18 +49,21 @@ export function HelpPage() {
             </h2>
             <div className="space-y-4">
               <p className="text-gray-700">
-                Bunona is a pattern recognition game where you need to identify the missing number in a sequence of bananas.
-                Each puzzle presents a unique challenge that tests your logical thinking and problem-solving skills.
+                Bunona is a pattern recognition game where you need to identify
+                the missing number in a sequence of bananas. Each puzzle
+                presents a unique challenge that tests your logical thinking and
+                problem-solving skills.
               </p>
               <div className="bg-yellow-50 p-4 rounded-lg">
                 <h3 className="font-semibold text-[#4A2C00] mb-2">Example:</h3>
-                <img 
-                  src="https://www.sanfoh.com/uob/banana/data/t9e20c893e055dcedb1688dd580n1.png" 
+                <img
+                  src="https://www.sanfoh.com/uob/banana/data/t9e20c893e055dcedb1688dd580n1.png"
                   alt="Example Banana Puzzle"
                   className="rounded-lg shadow-md mb-2"
                 />
                 <p className="text-sm text-gray-600">
-                  In this example, you need to find the pattern and determine which number (0-9) completes the sequence.
+                  In this example, you need to find the pattern and determine
+                  which number (0-9) completes the sequence.
                 </p>
               </div>
             </div>
@@ -83,7 +97,10 @@ export function HelpPage() {
                 <li>Medium: 20 points per correct answer</li>
                 <li>Hard: 30 points per correct answer</li>
               </ul>
-              <p>You have three lives per game. Each incorrect answer costs one life.</p>
+              <p>
+                You have three lives per game. Each incorrect answer costs one
+                life.
+              </p>
             </div>
           </div>
 

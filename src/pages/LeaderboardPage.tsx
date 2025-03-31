@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Trophy, Medal, Crown, Banana, ArrowLeft } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { getLeaderboard } from '../lib/database';
-import DecorativeBanana from '../components/DecorativeBanana';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Trophy, Medal, Crown, Banana, ArrowLeft } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { getLeaderboard } from "../lib/database";
+import DecorativeBanana from "../components/DecorativeBanana";
 
 interface LeaderboardEntry {
   userId: string;
@@ -38,7 +38,7 @@ export function LeaderboardPage() {
         const data = await getLeaderboard(10);
         setLeaderboard(data);
       } catch (error) {
-        console.error('Error loading leaderboard:', error);
+        console.error("Error loading leaderboard:", error);
       } finally {
         setIsLoading(false);
       }
@@ -61,7 +61,7 @@ export function LeaderboardPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="flex items-center space-x-2 text-[#4A2C00] hover:text-yellow-700 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -74,8 +74,12 @@ export function LeaderboardPage() {
           <div className="flex justify-center mb-4">
             <Trophy className="w-16 h-16 text-yellow-500" />
           </div>
-          <h1 className="text-4xl font-bold text-[#4A2C00] mb-2">Top Banana Players</h1>
-          <p className="text-yellow-800">Who will be crowned the ultimate banana master?</p>
+          <h1 className="text-4xl font-bold text-[#4A2C00] mb-2">
+            Top Banana Players
+          </h1>
+          <p className="text-yellow-800">
+            Who will be crowned the ultimate banana master?
+          </p>
         </div>
 
         {/* Leaderboard Table */}
@@ -96,10 +100,10 @@ export function LeaderboardPage() {
                   <tr
                     key={player.userId}
                     className={`
-                      ${index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}
-                      ${player.userId === user?.id ? 'bg-yellow-100' : ''}
+                      ${index % 2 === 0 ? "bg-yellow-50" : "bg-white"}
+                      ${player.userId === user?.id ? "bg-yellow-100" : ""}
                       hover:bg-yellow-100 transition-colors
-                      ${index < 3 ? 'font-semibold' : ''}
+                      ${index < 3 ? "font-semibold" : ""}
                     `}
                   >
                     <td className="px-6 py-4">
@@ -108,10 +112,16 @@ export function LeaderboardPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 flex items-center space-x-2">
-                      <Banana className={`w-5 h-5 ${index < 3 ? 'text-yellow-500' : 'text-gray-400'}`} />
+                      <Banana
+                        className={`w-5 h-5 ${
+                          index < 3 ? "text-yellow-500" : "text-gray-400"
+                        }`}
+                      />
                       <span>{player.username}</span>
                     </td>
-                    <td className="px-6 py-4 text-right">{player.bestScore.toLocaleString()}</td>
+                    <td className="px-6 py-4 text-right">
+                      {player.bestScore.toLocaleString()}
+                    </td>
                     <td className="px-6 py-4 text-right">{player.gamesWon}</td>
                     <td className="px-6 py-4 text-right">
                       {((player.winLossRatio || 0) * 100).toFixed(1)}%

@@ -56,7 +56,8 @@ export function DifficultyPage() {
           <button
             onClick={() => navigate("/help")}
             className="absolute w-12 h-12 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-all hover:scale-105"
-            aria-label="Help">
+            aria-label="Help"
+          >
             <HelpCircle className="w-5 h-5" />
           </button>
           <h2 className="text-4xl font-bold text-[#4A2C00] mb-2">
