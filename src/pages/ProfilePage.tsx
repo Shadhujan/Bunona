@@ -15,12 +15,14 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import { getUserStats } from '../lib/database';
 import type { UserStats } from '../lib/database';
+import BadgeProps from '../components/BadgeProps';
 
 interface StatCardProps {
   title: string;
   value: number | string;
   icon: React.ElementType;
   color: string;
+  alt?: string; // Optional alt property
 }
 
 const StatCard = ({ title, value, icon: Icon, color }: StatCardProps) => (
@@ -165,27 +167,41 @@ export function ProfilePage() {
             {stats && (
               <>
                 {stats.gamesWon > 0 && (
-                  <div className="flex flex-col items-center p-4 bg-yellow-50 rounded-lg border border-yellow-200 hover:border-yellow-300 transition-colors">
+                    <div 
+                    className="flex flex-col items-center p-4 bg-yellow-50 rounded-lg border border-yellow-200 hover:border-yellow-300 transition-colors group"
+                    >
                     <Trophy className="w-8 h-8 text-yellow-500 mb-2" />
                     <span className="text-sm text-center text-[#4A2C00]">First Win</span>
-                  </div>
+                    <div className="hidden group-hover:block absolute bg-white text-gray-700 text-xs rounded-lg shadow-lg p-2 mt-2">
+                      <BadgeProps description="First win of the game" />
+                    </div>
+                    </div>
                 )}
                 {stats.bestScore >= 500 && (
-                  <div className="flex flex-col items-center p-4 bg-yellow-50 rounded-lg border border-yellow-200 hover:border-yellow-300 transition-colors">
+                  <div className="flex flex-col items-center p-4 bg-yellow-50 rounded-lg border border-yellow-200 hover:border-yellow-300 transition-colors group">
                     <Crown className="w-8 h-8 text-yellow-500 mb-2" />
                     <span className="text-sm text-center text-[#4A2C00]">Score Master</span>
+                    <div className="hidden group-hover:block absolute bg-white text-gray-700 text-xs rounded-lg shadow-lg p-2 mt-2">
+                      <BadgeProps description="Get score morethan 500" />
+                    </div>
                   </div>
                 )}
                 {stats.winLossRatio >= 0.7 && (
-                  <div className="flex flex-col items-center p-4 bg-yellow-50 rounded-lg border border-yellow-200 hover:border-yellow-300 transition-colors">
+                  <div className="flex flex-col items-center p-4 bg-yellow-50 rounded-lg border border-yellow-200 hover:border-yellow-300 transition-colors group">
                     <Star className="w-8 h-8 text-yellow-500 mb-2" />
                     <span className="text-sm text-center text-[#4A2C00]">Elite Player</span>
+                    <div className="hidden group-hover:block absolute bg-white text-gray-700 text-xs rounded-lg shadow-lg p-2 mt-2">
+                      <BadgeProps description="Get Win Ration above 70%" />
+                    </div>
                   </div>
                 )}
                 {stats.totalGames >= 50 && (
-                  <div className="flex flex-col items-center p-4 bg-yellow-50 rounded-lg border border-yellow-200 hover:border-yellow-300 transition-colors">
+                  <div className="flex flex-col items-center p-4 bg-yellow-50 rounded-lg border border-yellow-200 hover:border-yellow-300 transition-colors group">
                     <Gamepad2 className="w-8 h-8 text-yellow-500 mb-2" />
                     <span className="text-sm text-center text-[#4A2C00]">Dedicated Player</span>
+                    <div className="hidden group-hover:block absolute bg-white text-gray-700 text-xs rounded-lg shadow-lg p-2 mt-2">
+                      <BadgeProps description="Played Total game over 50" />
+                    </div>
                   </div>
                 )}
               </>

@@ -51,11 +51,13 @@ export interface DailyChallenge {
 export async function getUserStats(userId: string): Promise<UserStats | null> {
   try {
     const { data, error } = await supabase
-      .from('user_stats') // Querying the 'user_stats' table
-      .select('*') // Selecting all columns
-      .eq('user_id', userId) // Filtering by user ID
-      .single(); // Expecting a single result
-
+      .from('user_stats')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
+      // Using maybeSingle to return null if no data is found
+    // This is useful for handling cases where the user might not have any stats yet
+    // or if the user ID is invalid.
     if (error) throw error; // Throw error if any
 
     if (!data) return null; // Return null if no data found
@@ -80,7 +82,7 @@ export async function getUserStats(userId: string): Promise<UserStats | null> {
 export async function getLeaderboard(limit = 10) {
   try {
     const { data, error } = await supabase
-      .from('user_stats') // Querying the 'user_stats' table
+      .from('user_stats')
       .select(`
         user_id,
         best_score,
@@ -108,7 +110,6 @@ export async function getLeaderboard(limit = 10) {
     return [];
   }
 }
-
 
 export async function getDailyChallengeStatus(userId: string): Promise<DailyChallenge> {
   try {
@@ -166,41 +167,6 @@ export async function getDailyChallengeStatus(userId: string): Promise<DailyChal
       }
     }
 
-    /*
-        // Normalize the date to midnight (only date part)
-    const normalizeDate = (date: Date): Date => {
-      const normalized = new Date(date);
-      normalized.setHours(0, 0, 0, 0);
-      return normalized;
-    };
-
-    let currentStreak = 0;
-    if (streakData && streakData.length > 0) {
-      // Map challenge dates to Date objects and normalize them
-      const dates = streakData.map(d => normalizeDate(new Date(d.challenge_date)));
-      const scores = streakData.map(d => d.score);
-      
-      for (let i = 0; i < dates.length; i++) {
-        if (scores[i] === 0) break; // Break streak on zero score
-        
-        if (i === 0) {
-          currentStreak++;
-          continue;
-        }
-        
-        // Calculate the difference in days between consecutive challenge dates
-        const diffInMs = Math.abs(dates[i - 1].getTime() - dates[i].getTime());
-        const diffInDays = diffInMs / (1000 * 60 * 60 * 24); // Convert ms to days
-        
-        if (diffInDays <= 2) { // Check if the difference is within 2 days
-          currentStreak++;
-        } else {
-          break; // Break if the difference is greater than 2 days
-        }
-      }
-    }
-    */
-
     // Get the highest score
     const { data: highScores, error: scoreError } = await supabase
       .from('daily_challenge_scores') // Querying the 'daily_challenge_scores' table
@@ -229,7 +195,7 @@ export async function getDailyChallengeStatus(userId: string): Promise<DailyChal
     }
 
     // Calculate next available time (midnight Sri Lanka time)
-    // const lastCompletedAt = new Date(lastChallenge.completed_at);
+    const lastCompletedAt = new Date(lastChallenge.completed_at);
     const nextAvailable = new Date(sriLankaTime);
     nextAvailable.setHours(24, 0, 0, 0); // Set to next midnight in Sri Lanka time
 

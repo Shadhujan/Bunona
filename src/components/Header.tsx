@@ -9,7 +9,6 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ username }) => {
   const navigate = useNavigate();
-
   return (
     <nav
       className="bg-yellow-200/90 shadow-md px-4 py-2 flex items-center justify-between rounded-lg backdrop-filter backdrop-blur-lg"

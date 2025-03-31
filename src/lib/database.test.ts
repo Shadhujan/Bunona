@@ -64,7 +64,7 @@ describe('getLeaderboard', () => {
       best_score,
       games_won,
       win_loss_ratio,
-      username
+      profiles!user_stats_user_id_fkey (username)
     `);
   });
 

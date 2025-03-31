@@ -18,17 +18,19 @@ interface Question {
 }
 
 export function DailyChallengeGame() {
-  const navigate = useNavigate(); // Navigation hook
-  const { user } = useAuth(); // Get current user from AuthContext
-  const [score, setScore] = useState(10); // State for score
-  const [timeLeft, setTimeLeft] = useState(10); // State for timer
-  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null); // State for current question
-  const [isLoading, setIsLoading] = useState(true); // State for loading status
-  const [userAnswer, setUserAnswer] = useState(''); // State for user's answer
-  const [gameState, setGameState] = useState<'playing' | 'correct' | 'incorrect' | 'gameover'>('playing'); // State for game status
-  const [error, setError] = useState<string | null>(null); // State for error messages
-  const [isSavingScore, setIsSavingScore] = useState(false); // State for saving score status
-  const [streak, setStreak] = useState(0); // State for user's streak
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [score, setScore] = useState(10);
+  const [timeLeft, setTimeLeft] = useState(30); // Increased time for daily challenge
+  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userAnswer, setUserAnswer] = useState('');
+  const [gameState, setGameState] = useState<
+    'playing' | 'correct' | 'incorrect' | 'gameover'
+  >('playing');
+  const [error, setError] = useState<string | null>(null);
+  const [isSavingScore, setIsSavingScore] = useState(false);
+  const [streak, setStreak] = useState(1);
 
   useEffect(() => {
     const loadStreak = async () => {

@@ -13,8 +13,8 @@ import { Banana, Trophy, User, LogOut, PlayCircle, Calendar, HelpCircle, XCircle
 import { useAuth } from './contexts/AuthContext';
 import { supabase } from './lib/supabase';
 import { getDailyChallengeStatus } from './lib/database';
-import Footer from './pages/Footer';
-import Header from './pages/Header';
+import Footer from './components/Footer';
+import Header from './components/Header';
 
 function MainMenu() {
   const { user } = useAuth();
@@ -262,8 +262,8 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/login" element={<><LoginPage /><Footer /></>} />
+      <Route path="/signup" element={<><SignupPage /><Footer /></>} />
       <Route path="/difficulty" element={
         <ProtectedRoute>
             <DifficultyPage />
@@ -289,11 +289,13 @@ function App() {
       <Route path="/profile" element={
         <ProtectedRoute>
           <ProfilePage />
+          <Footer />
         </ProtectedRoute>
       } />
       <Route path="/help" element={
         <ProtectedRoute>
           <HelpPage />
+          <Footer />
         </ProtectedRoute>
       } />
       <Route
