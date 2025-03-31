@@ -34,7 +34,24 @@ export function SignupPage() {
       const validatedData = signupSchema.parse(formData);
       setIsLoading(true);
 
-      const { error } = await supabase.auth.signUp({
+      // Check if username is already taken
+      const { data: existingUser, error: checkError } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('username', validatedData.username)
+        .maybeSingle();
+
+      if (checkError && checkError.code !== 'PGRST116') {
+        throw checkError;
+      }
+
+      if (existingUser) {
+        setErrors({ username: 'Username is already taken' });
+        return;
+      }
+
+      // Sign up the user
+      const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email: validatedData.email,
         password: validatedData.password,
         options: {
@@ -44,7 +61,23 @@ export function SignupPage() {
         }
       });
 
-      if (error) throw error;
+      if (signUpError) throw signUpError;
+
+      if (!authData.user) {
+        throw new Error('Failed to create user');
+      }
+
+      // Create profile - this will trigger the database function to create user_stats
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert([
+          {
+            id: authData.user.id,
+            username: validatedData.username
+          }
+        ]);
+
+      if (profileError) throw profileError;
 
       // Redirect to login page after successful signup
       navigate('/login', { 
@@ -62,12 +95,6 @@ export function SignupPage() {
       } else if (error instanceof Error) {
         setErrors({ submit: error.message });
       }
-      // navigate('/login', { 
-      //   state: { message: 'Account created successfully! Please log in.' }
-      // });
-
-      // ///////////////final viva make sure to un thick these and do
-      
     } finally {
       setIsLoading(false);
     }

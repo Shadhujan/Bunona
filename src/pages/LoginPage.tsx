@@ -20,6 +20,42 @@ export function LoginPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
 
+  const ensureProfileExists = async (userId: string, username: string) => {
+    try {
+      // First check if profile exists
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', userId)
+        .maybeSingle();
+
+      // If profile doesn't exist, create it
+      if (!existingProfile) {
+        const { error: profileError } = await supabase.auth.updateUser({
+          data: { username }
+        });
+
+        if (profileError) throw profileError;
+
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert([
+            {
+              id: userId,
+              username: username
+            }
+          ])
+          .select()
+          .single();
+
+        if (insertError) throw insertError;
+      }
+    } catch (error) {
+      console.error('Error ensuring profile exists:', error);
+      throw error;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
@@ -28,12 +64,20 @@ export function LoginPage() {
       const validatedData = loginSchema.parse(formData);
       setIsLoading(true);
 
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: validatedData.email,
         password: validatedData.password,
       });
 
       if (error) throw error;
+
+      if (data.user) {
+        // Get or generate username
+        const username = data.user.user_metadata.username || `user_${data.user.id.slice(0, 8)}`;
+        
+        // Ensure profile exists
+        await ensureProfileExists(data.user.id, username);
+      }
 
       // Redirect to main menu after successful login
       navigate('/');

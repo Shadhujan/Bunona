@@ -13,8 +13,8 @@ import {
   HeartCrack
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { getUserStats } from '../lib/database';
-import type { UserStats } from '../lib/database';
+import { getDailyChallengeStatus, getUserStats } from '../lib/database';
+import type { UserStats, DailyChallenge } from '../lib/database';
 import BadgeProps from '../components/BadgeProps';
 
 interface StatCardProps {
@@ -41,6 +41,8 @@ export function ProfilePage() {
   const username = user?.user_metadata.username || 'Player';
   const [stats, setStats] = useState<UserStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  // Add the daily challenge status state:
+const [dailyChallengeStatus, setDailyChallengeStatus] = useState<DailyChallenge | null>(null);
 
   useEffect(() => {
     const loadUserStats = async () => {
@@ -58,6 +60,15 @@ export function ProfilePage() {
 
     loadUserStats();
   }, [user]);
+
+    // Fetch daily challenge status (e.g., for the streak)
+    useEffect(() => {
+      if (user) {
+        getDailyChallengeStatus(user.id)
+          .then(status => setDailyChallengeStatus(status))
+          .catch(err => console.error('Error fetching daily challenge status', err));
+      }
+    }, [user]);
 
   if (isLoading) {
     return (
@@ -136,7 +147,7 @@ export function ProfilePage() {
           />
           <StatCard
             title="Streak"
-            value="5"
+            value={dailyChallengeStatus?.currentStreak || 0}
             icon={Flame}
             color="text-orange-500"
           />
