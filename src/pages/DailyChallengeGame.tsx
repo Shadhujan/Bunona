@@ -21,16 +21,14 @@ export function DailyChallengeGame() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [score, setScore] = useState(10);
-  const [timeLeft, setTimeLeft] = useState(30); // Increased time for daily challenge
+  const [timeLeft, setTimeLeft] = useState(20); // Increased time for daily challenge
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [userAnswer, setUserAnswer] = useState("");
-  const [gameState, setGameState] = useState<
-    "playing" | "correct" | "incorrect" | "gameover"
-  >("playing");
+  const [gameState, setGameState] = useState<"playing" | "correct" | "incorrect" | "gameover">("playing");
   const [error, setError] = useState<string | null>(null);
   const [isSavingScore, setIsSavingScore] = useState(false);
-  const [streak, setStreak] = useState(1);
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     const loadStreak = async () => {
@@ -56,7 +54,7 @@ export function DailyChallengeGame() {
 
       setCurrentQuestion(data); // Set current question
       setGameState("playing"); // Set game state to playing
-      setTimeLeft(10); // Reset timer for new question
+      setTimeLeft(20); // Reset timer for new question
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load question"); // Set error message
     } finally {
@@ -158,7 +156,7 @@ export function DailyChallengeGame() {
             <p className="text-xl mb-2">Final Score: {score}</p>
             <div className="flex items-center justify-center space-x-2 text-yellow-600">
               <Star className="w-5 h-5" />
-              <span>Current Streak: {streak}</span>
+              <span>Current Streak: {streak+1}</span>
             </div>
           </div>
           {currentQuestion && (
