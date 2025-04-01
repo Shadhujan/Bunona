@@ -6,6 +6,7 @@ import {
   Clock,
   Trophy,
   HelpCircle,
+  Award,
 } from "lucide-react";
 import DecorativeBanana from "../components/DecorativeBanana";
 
@@ -120,9 +121,33 @@ export function HelpPage() {
               <p>The game ends when you run out of time or lives.</p>
             </div>
           </div>
+          {/* Titles And Achivements */}
+          <div className="bg-white/90 rounded-lg border-2 border-yellow-500 p-6">
+            <h2 className="text-2xl font-bold text-[#4A2C00] mb-4 flex items-center">
+              <Award className="w-6 h-6 mr-2 text-yellow-500" />
+              Titles And Achivements
+            </h2>
+            <div className="space-y-3 text-gray-700">
+              <p>
+                Earn titles and achievements as you play games! They reflect
+                your skill and progress over time.
+              </p>
+              <ul className="list-disc list-inside pl-4 space-y-2">
+                <li>Improve your win/loss ratio to unlock different titles.</li>
+                <li>Achieve high scores to earn unique achievements.</li>
+                <li>
+                  Play more games to unlock additional achievements and reach
+                  new milestones.
+                </li>
+              </ul>
+              <p>
+                Keep playing to collect them all and become the ultimate Banana
+                Master!
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-
       <DecorativeBanana />
     </div>
   );

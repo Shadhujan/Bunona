@@ -39,9 +39,7 @@ export function GamePage({ difficulty: propDifficulty }: GamePageProps) {
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [userAnswer, setUserAnswer] = useState("");
-  const [gameState, setGameState] = useState<
-    "playing" | "correct" | "incorrect" | "gameover"
-  >("playing");
+  const [gameState, setGameState] = useState<"playing" | "correct" | "incorrect" | "gameover">("playing");
   const [error, setError] = useState<string | null>(null);
   const [isSavingScore, setIsSavingScore] = useState(false);
 
@@ -70,7 +68,7 @@ export function GamePage({ difficulty: propDifficulty }: GamePageProps) {
     fetchQuestion();
   }, [fetchQuestion]);
 
-  //timer logic
+  // Timer logic
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -87,7 +85,7 @@ export function GamePage({ difficulty: propDifficulty }: GamePageProps) {
     }
 
     return () => clearInterval(timer);
-  }, [timeLeft]);
+  }, [timeLeft, gameState]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,9 +101,15 @@ export function GamePage({ difficulty: propDifficulty }: GamePageProps) {
       setScore((prev) => prev + POINTS_MAP[difficulty]);
       setGameState("correct");
       setTimeout(() => {
-        fetchQuestion();
-        setUserAnswer("");
-        setGameState("playing");
+        // Only fetch a new question if there's still time left
+        if (timeLeft > 0) {
+          fetchQuestion();
+          setUserAnswer("");
+          setGameState("playing");
+        } else {
+          // Ensure gameover state is maintained if time has run out
+          setGameState("gameover");
+        }
       }, 1500);
     } else {
       setLives((prev) => prev - 1);
