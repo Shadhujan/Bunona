@@ -33,7 +33,6 @@ function App() {
           <ProtectedRoute>
             <Header username={""} />
             <GamePage />
-            <Footer />
           </ProtectedRoute>
         }
       />
@@ -43,7 +42,6 @@ function App() {
           <ProtectedRoute>
             <Header username={""} />
             <DailyChallengeGame />
-            <Footer />
           </ProtectedRoute>
         }
       />
@@ -53,7 +51,6 @@ function App() {
           <ProtectedRoute>
             <Header username={""} />
             <LeaderboardPage />
-            <Footer />
           </ProtectedRoute>
         }
       />
@@ -63,7 +60,6 @@ function App() {
           <ProtectedRoute>
             <Header username={""} />
             <ProfilePage />
-            <Footer />
           </ProtectedRoute>
         }
       />
@@ -73,7 +69,6 @@ function App() {
           <ProtectedRoute>
             <Header username={""} />
             <HelpPage />
-            <Footer />
           </ProtectedRoute>
         }
       />

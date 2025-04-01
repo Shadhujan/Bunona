@@ -28,6 +28,7 @@
 
 import React from "react";
 import { Banana } from "lucide-react";
+import Footer from "./Footer";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -36,6 +37,7 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ children, title }: AuthLayoutProps) {
   return (
+    <>
     <div className="min-h-screen bg-gradient-to-br from-yellow-200 to-yellow-400 flex items-center justify-center p-4">
       <div className="flex items-center absolute top-0 left-10 m-4">
         <img
@@ -63,5 +65,7 @@ export function AuthLayout({ children, title }: AuthLayoutProps) {
         <Banana className="w-full h-full text-yellow-600 opacity-20" />
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
