@@ -112,6 +112,7 @@ export function GamePage({ difficulty: propDifficulty }: GamePageProps) {
         }
       }, 1500);
     } else {
+      //Lives system
       setLives((prev) => prev - 1);
       setGameState("incorrect");
       if (lives <= 1) {
@@ -125,6 +126,7 @@ export function GamePage({ difficulty: propDifficulty }: GamePageProps) {
     }
   };
 
+  //saving score in database
   const saveScore = async () => {
     if (!user?.id || isSavingScore) return;
 
