@@ -6,6 +6,7 @@
  * @param {string} supabaseAnonKey - The anonymous key for the Supabase instance.
  */
 
+// Adapted from Supabase Documentation
 import { createClient } from "@supabase/supabase-js";
 
 // Supabase client

@@ -11,11 +11,12 @@ interface AuthContextType {
 // Create the AuthContext with an undefined default value
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// AuthProvider component to wrap around parts of the app that need authentication
+// Authentication logic
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null); // State to hold the current user
   const [loading, setLoading] = useState(true); // State to hold the loading status
 
+//for session management
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
