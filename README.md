@@ -1,3 +1,5 @@
+![Repository Views](https://komarev.com/ghpvc/?username=Shadhujan/Bunona&style=flat-square&color=blue)
+
 # How to Setup
 
 1. Clone the repository to your local machine:
