@@ -1,4 +1,9 @@
-![Repository Views](https://komarev.com/ghpvc/?username=Shadhujan/Bunona&style=flat-square&color=blue)
+![Repo Views](https://komarev.com/ghpvc/?username=Shadhujan&label=Repository%20Views&color=blue&style=flat-square)
+
+![Hits](https://hits.sh/github.com/Shadhujan/YOUR-REPO-NAME.svg?style=flat-square&color=blue)
+
+![GitHub stars](https://img.shields.io/github/stars/Shadhujan/YOUR-REPO-NAME?style=flat-square&color=blue)
+
 
 # How to Setup
 
