@@ -35,7 +35,7 @@ jobs:
       - name: Call Edge Function (write keep alive log)
         run: |
           echo "Calling keep-alive Edge Function..."
-           curl -X POST "${{ secrets.SUPABASE_URL }}/rest/v1/keep_alive" \
+           curl -X POST "${{ secrets.SUPABASE_URL }}/rest/v1/keep_alive?source=Github-action" \
             -H "apikey: ${{ secrets.SUPABASE_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_KEY }}" \
             -H "Content-Type: application/json" \
