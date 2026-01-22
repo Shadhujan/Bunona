@@ -5,19 +5,6 @@ on:
     - cron: '0 0 * * *'   # every day
   workflow_dispatch:
 
-# jobs:
-#   ping:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Keep Supabase Alive
-#         run: |
-#           curl -X POST "${{ secrets.SUPABASE_URL }}/rest/v1/keep_alive" \
-#             -H "apikey: ${{ secrets.SUPABASE_KEY }}" \
-#             -H "Authorization: Bearer ${{ secrets.SUPABASE_KEY }}" \
-#             -H "Content-Type: application/json" \
-#             -H "Prefer: resolution=merge-duplicates" \
-#             -d '{"id": 1, "pinged_at": "now()"}'
-
 jobs:
   ping:
     runs-on: ubuntu-latest
@@ -35,9 +22,8 @@ jobs:
       - name: Call Edge Function (write keep alive log)
         run: |
           echo "Calling keep-alive Edge Function..."
-           curl -X POST "${{ secrets.SUPABASE_URL }}/rest/v1/keep_alive?source=Github-action" \
-            -H "apikey: ${{ secrets.SUPABASE_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_KEY }}" \
+          curl -sS --fail-with-body -X POST \
+            "${{ secrets.SUPABASE_URL }}/functions/v1/keep-alive" \
             -H "Content-Type: application/json" \
             -d '{"source":"github-actions"}'
           echo ""
